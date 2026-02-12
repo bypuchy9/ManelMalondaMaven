@@ -1,3 +1,5 @@
+package com.manelmalonda.tema4maven;
+
 import com.github.lalyos.jfiglet.FigletFont;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.graphics.TextGraphics;
@@ -5,20 +7,21 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception, InterruptedIOException {
+    public static void main(String[] args) throws Exception {
 
         String texto = "Manel Malonda";
         String banner = FigletFont.convertOneLine(texto);
+
         List<String> lines = new ArrayList<>();
         for (String line : banner.split("\n")) {
             lines.add(line);
         }
+
         lines.add("========== CURRICULUM VITAE: MANEL ==========");
         lines.add("--- DATOS PERSONALES Y CONTACTO ---");
         lines.add(" Edad:       18 años");
@@ -40,33 +43,53 @@ public class Main {
         lines.add(" * Inglés:  Nivel B1");
         lines.add(" * Fortalezas: Trabajo en equipo y comunicación.");
         lines.add("=============================================");
-        lines.forEach(System.out::println);
-        //punto 6
+
+        //  PUNTO 6
         Screen screen = new DefaultTerminalFactory().createScreen();
         screen.startScreen();
         screen.setCursorPosition(null);
+
+        //  PUNTO 8
+
+        // Empezamos desde abajo del todo (altura de la terminal)
+        int y = screen.getTerminalSize().getRows();
+
+        while (true) {
+            drawFrame(screen, lines, y);
+            try {
+                Thread.sleep(600);
+            } catch (InterruptedException e) {
+                break;
+            }
+            y--;
+        }
     }
 
-    //punto 7
+    // PUNTO 7
     private static void drawFrame(Screen screen, List<String> lines, int yOffset) throws IOException {
         TerminalSize size = screen.getTerminalSize();
         int width = size.getColumns();
         int height = size.getRows();
+
         screen.clear();
+
         TextGraphics tg = screen.newTextGraphics();
+
         for (int i = 0; i < lines.size(); i++) {
             int y = yOffset + i;
             if (y < 0 || y >= height) continue;
+
             String line = lines.get(i);
-            // Centrado horizontal (opcional, pero queda mejor)
+
+            // Centrado horizontal
             int x = Math.max(0, (width - line.length()) / 2);
             if (x >= width) continue;
-            // Recorte simple si se sale por la derecha
-            String visible = (line.length() > width) ? line.substring(0, width) :
-                    line;
+
+            // Recorte
+            String visible = (line.length() > width) ? line.substring(0, width) : line;
+
             tg.putString(x, y, visible);
         }
         screen.refresh();
     }
-
 }
