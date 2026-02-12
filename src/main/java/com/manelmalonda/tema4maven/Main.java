@@ -1,4 +1,7 @@
 import com.github.lalyos.jfiglet.FigletFont;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 public class Main {
@@ -7,7 +10,6 @@ public class Main {
 
         String texto = "Manel Malonda";
         String banner = FigletFont.convertOneLine(texto);
-        System.out.println(banner);
         List<String> lines = new ArrayList<>();
         for (String line : banner.split("\n")) {
             lines.add(line);
@@ -34,6 +36,10 @@ public class Main {
         lines.add(" * Fortalezas: Trabajo en equipo y comunicación.");
         lines.add("=============================================");
         lines.forEach(System.out::println);
+        //punto 6
+        Screen screen = new DefaultTerminalFactory().createScreen();
+        screen.startScreen();
+        screen.setCursorPosition(null);
 
     }
 }
